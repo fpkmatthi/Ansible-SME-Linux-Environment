@@ -1,0 +1,12 @@
+# site.yml
+---
+
+- import_playbook: router.yml
+- import_playbook: web.yml
+- import_playbook: dns.yml
+# - import_playbook: mail.yml
+- import_playbook: dhcp.yml
+# - import_playbook: ldap.yml
+# - import_playbook: intranet.yml
+- import_playbook: samba.yml
+- import_playbook: workstation.yml

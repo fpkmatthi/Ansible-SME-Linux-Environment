@@ -1,0 +1,18 @@
+---
+# Secondary Configuration
+
+bind_zones:
+  # Secondary server for domain fpkmatthi.web (use zone type autodetection)
+  - name: 'fpkmatthi.web'
+    primaries:
+      - 172.16.192.2
+    networks:
+      - '192.0.2'
+
+  # Secondary server for domain fpkmatthi.local (specify zone type explicitly)
+  - name: 'fpkmatthi.local'
+    type: secondary
+    primaries:
+      - 172.16.192.2
+    networks:
+      - '172.16'

@@ -1,0 +1,57 @@
+---
+ansible_connection: network_cli
+ansible_network_os: vyos
+ansible_user: vagrant
+# ansible_password: vagrant
+
+vyos_interfaces:
+  eth0:
+    ipv4: dhcp
+    description: WAN
+  eth1:
+    ipv4: '192.0.2.254/24'
+    description: DMZ
+  eth2:
+    ipv4: '172.16.255.254/16'
+    description: internal
+
+vyos_nat_rules:
+  - number: 100
+    outbound_interface: eth0
+    source_ipv4: '192.0.2.0/24'
+    translation: masquerade
+  - number: 200
+    outbound_interface: eth0
+    source_ipv4: '172.16.0.0/16'
+    translation: masquerade
+  - number: 300
+    outbound_interface: eth1
+    source_ipv4: '172.16.0.0/16'
+    translation: masquerade
+
+vyos_services:
+  - type: dns
+    domains:
+      - name: fpkmatthi.local
+        server: '172.16.192.2'
+    listen_on:
+      - eth1
+      - eth2
+    name_server:
+      - '10.0.2.15'
+  - type: dhcp_relay
+    ipv4: '172.16.192.10'
+    interface:
+      - eth2
+  - type: ssh
+    port: 22
+vyos_protocols:
+  - type: static
+    ipv4: '0.0.0.0/0'
+    next_hop: '10.0.2.2'
+vyos_system:
+  - type: ntp
+      - 'be.pool.ntp.org'
+  - type: time_zone
+    zone: 'Etc/GMT+1'
+

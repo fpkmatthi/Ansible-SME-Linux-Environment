@@ -1,0 +1,32 @@
+# Ansible group definitions
+#
+# Leave the file empty if you do not want to define groups.
+---
+
+router:
+  - router001
+
+web:
+  - webserv001
+
+mail:
+  - mailserv001
+
+dns:
+  - dnsserv001
+  - dnsserv002
+
+dhcp:
+  - dhcpserv001
+
+ldap:
+  - ldapserv001
+
+intranet:
+  - intranetserv001
+
+samba:
+  - sambaserv001
+
+workstation:
+  - ws001

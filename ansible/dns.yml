@@ -1,0 +1,11 @@
+# dns.yml
+---
+
+- hosts: dns
+  become: true
+  roles:
+    - bertvv.rh-base
+    - bertvv.bind
+    - hwwilliams.fail2ban
+    - resolv.conf
+    - default.gw

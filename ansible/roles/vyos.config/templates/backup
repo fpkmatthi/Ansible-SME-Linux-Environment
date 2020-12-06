@@ -1,0 +1,54 @@
+{% if vyos_interfaces is defined %}
+{% for interface, value in vyos_interfaces.items() %}
+set interfaces ethernet {{ interface | trim }} address {{ value.ipv4 | trim }}
+set interfaces ethernet {{ interface | trim }} description {{ value.description | trim }}
+{% endfor %}
+{% endif %}
+
+{% if vyos_nat_rules is defined %}
+{% for rule in vyos_nat_rules %}
+set nat source {{ rule.number }} outbound-interface {{ rule.outbound_interface }}
+set nat source {{ rule.number }} source address {{ rule.source_ipv4 }}
+set nat source {{ rule.number }} translation address {{ rule.translation }}
+{% endfor %}
+{% endif %}
+
+
+{% if vyos_protocols is defined %}
+{% for protocol in vyos_protocols %}
+{% if protocol.type == 'static' %}
+set protocols static route {{ protocol.ipv4 }} next-hop {{ protocol.next_hop }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+
+{% if vyos_services is defined %}
+{% for service in vyos_services %}
+{% if service.type == 'dns' %}
+{% for domain in service.domains %}
+set service {{ service.type }} domain server {{ domain.server }}
+{% endfor %}
+{% for listen in service.listen_on %}
+set service {{ service.type }} listen-on {{ listen }}
+{% endfor %}
+{% for ns in service.name_server %}
+set service {{ service.type }} name-server {{ ns }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+
+{% if vyos_system is defined %}
+{% for sysconf in vyos_system %}
+{% if sysconf.type == 'ntp' %}
+{% for ntpserv in sysconf.type %}
+set system ntp server {{ ntpserv }}
+{% endfor %}
+{% endif %}
+{% if sysconf.type == 'time_zone' %}
+set system time-zone {{ sysconf.zone }}
+{% endif %}
+{% endfor %}
+{% endif %}

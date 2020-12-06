@@ -1,0 +1,33 @@
+---
+
+- name: Resolv.conf | Stop NetworkManager from managing DNS
+  ini_file:
+    path: /etc/NetworkManager/NetworkManager.conf
+    state: present
+    no_extra_spaces: yes
+    section: main
+    option: dns
+    value: none
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+    - Reload NetworkManager
+  when:
+    - resolv_nameservers is defined
+    - resolv_nameservers | length > 0
+
+- name: Resolv.conf | Copy resolv.conf template file
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+    - Reload NetworkManager
+  when:
+    - resolv_nameservers is defined
+    - resolv_nameservers | length > 0

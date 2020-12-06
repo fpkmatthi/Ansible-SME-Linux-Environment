@@ -1,0 +1,54 @@
+# 172.16.0.2	172.16.127.254	Guests (dynamic IP)
+# 172.16.128.1	172.16.191.254	Worksations (reserved IP)
+# 172.16.192.1	172.16.255.254	Servers, gateway (static IP)
+---
+
+rhbase_firewall_allow_services:
+    - dhcp
+
+# Global settings
+dhcp_global_default_lease_time: 14400 # 4 uren
+dhcp_global_max_lease_time: 43200   # 12 uren
+dhcp_global_subnet_mask: 255.255.0.0
+dhcp_global_domain_name: fpkmatthi.local
+dhcp_global_routers: 172.16.255.254
+dhcp_global_domain_search:
+  - fpkmatthi.local
+  - fpkmatthi.web
+dhcp_global_domain_name_servers:
+  - 172.16.192.2
+  - 172.16.192.3
+
+# Class for VirtualBox VMs
+dhcp_global_classes:
+  - name: vbox
+    match: 'match if binary-to-ascii(16,8,":",substring(hardware, 1, 3)) = "8:0:27"'
+
+# Subnets
+dhcp_subnets:
+  - ip: 172.16.0.0
+    netmask: 255.255.0.0
+    routers: 172.16.255.254
+    pools:
+      # guests (dynamic ip)
+      - default_lease_time: 1800
+        max_lease_time: 14400
+        range_begin: 172.16.0.2
+        range_end: 172.16.127.254
+        allow: 'members of "vbox"'
+      # workstations (reserved IP)
+      - default_lease_time: 1800
+        max_lease_time: 43200
+        range_begin: 172.16.128.1
+        range_end: 172.16.191.254
+        deny: 'members of "vbox"'
+      # servers, gateway (static ip)
+      - range_begin: 172.16.192.1
+        range_end: 172.16.255.254
+        deny: 'members of "vbox"'
+
+# Hosts
+dhcp_hosts:
+  - name: ws001
+    mac: '08:00:27:FF:9F:81'    # MAC-adres van Adapter 1
+    ip: 172.16.128.31

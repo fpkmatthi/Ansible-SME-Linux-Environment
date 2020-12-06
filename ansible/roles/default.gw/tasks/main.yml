@@ -1,0 +1,18 @@
+---
+
+- name: Default gateway | Disable default gateway on eth0
+  command: nmcli con modify eth0 ipv4.never-default yes
+
+- name: Default gateway | Check if default gateway is present
+  command: ip route del default
+  register: defgwresult
+  ignore_errors: True
+
+- name: Default gateway | Delete default gateway
+  command: ip route del default
+  when: defgwresult.rc == 1
+
+- name: Default gateway | Add default gateway
+  command: ip route add default via '{{ default_gw }}'
+  notify:
+    - Reload NetworkManager

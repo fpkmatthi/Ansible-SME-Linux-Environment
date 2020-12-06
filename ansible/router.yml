@@ -1,0 +1,7 @@
+# router.yml
+---
+
+- hosts: router
+  become: true
+  roles:
+    - vyos.config

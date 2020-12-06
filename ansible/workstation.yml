@@ -1,0 +1,36 @@
+# workstation.yml
+---
+
+- hosts: workstation
+  become: true
+  roles:
+    - bertvv.rh-base
+    - resolv.conf
+    - default.gw
+  post_tasks:
+    - name: Configure network
+      command: nmcli dev mod eth1 ipv4.method auto
+    - name: Configure network
+      command: nmcli dev mod eth1 ipv4.gateway ""
+    - name: Configure network
+      command: nmcli dev mod eth1 ipv4.addresses ""
+    - name: Configure network
+      command: nmcli dev mod eth1 ipv4.dns ""
+    - name: Configure network
+      command: nmcli dev mod eth1 connection.autoconnect yes
+    - name: Configure network
+      command: ip link set eth1 down
+    - name: Configure network
+      command: ip link set eth1 up
+    # - name: Set eth1 to DHCP
+    #   command: nmcli device modify eth1 ipv4.method auto
+    # - name: Set default gateway of eth1 priority
+    #   command: nmcli connection modify System\ eth1 ipv4.route-metric 100
+# nmcli con mod "System eth1" ipv4.method auto
+# nmcli con mod "System eth1" ipv4.gateway ""
+# nmcli con mod "System eth1" ipv4.addresses ""
+# nmcli con mod "System eth1" ipv4.dns ""
+# nmcli con mod "System eth1" connection.autoconnect yes
+# ip link set eth1 down
+# ip link set eth1 up
+

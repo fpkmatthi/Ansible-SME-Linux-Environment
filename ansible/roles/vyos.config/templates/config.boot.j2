@@ -1,0 +1,131 @@
+interfaces {
+    {% for interface in vyos_interfaces %}
+    ethernet {{ interface.name }} {
+        address {{ interface.ipv4 }}
+        description {{ interface.description }}
+        duplex auto
+        smp_affinity auto
+        speed auto
+    }
+
+    {% endfor %}
+
+    loopback lo {
+    }
+}
+nat {
+    source {
+    {% for rule in vyos_nat_rules %}
+    rule {{ rule.number }} {
+        outbound-interface {{ rule.outbound_interface }}
+        source {
+            address {{ rule.source_ipv4 }}
+        }
+        translation {
+            address {{ rule.translation }}
+        }
+    }
+    {% endfor %}
+    }
+}
+protocols {
+    {% for protocol in vyos_protocols %}
+    {% if protocol.type == 'static' %}
+    static {
+        route {{ protocol.ipv4 }} {
+            next-hop {{ protocol.next-hop }} {
+            }
+        }
+    }
+    {% endif %}
+    {% endfor %}
+}
+service {
+    {% for service in vyos_services %}
+    {% if service.type == 'dns' %}
+    {{ service.type }} {
+        forwarding {
+            cache-size 150
+            {% for domain in service.domains %}
+            domain {{ domain.name }} {
+                server {{ domain.server }}
+            }
+            {% endfor %}
+            {% for listen in service.listen_on %}
+            listen-on {{ listen }}
+            {% endfor %}
+            {% for ns in service.name_server %}
+            name-server {{ ns }}
+            {% endfor %}
+        }
+    }
+    {% endif %}
+    {% if service.type == 'ssh' %}
+    {{ service.type }} {
+        port {{ service.port }}
+    }
+    {% endif %}
+    {% endfor %}
+}
+system {
+    config-management {
+        commit-revisions 20
+    }
+    host-name router001
+    login {
+        user vagrant {
+            authentication {
+                encrypted-password $6$ThHh/cd.E1kz$00WDO235a.qufPAOLQH7Xp7hgMpNe7gaCU4pKr.xyK81C1TiGneHzVCU3IhRzw3EFnaPvW5udjmmmJG3vgfY71
+                plaintext-password ""
+                public-keys vagrant_insecure_public {
+                    key AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ==
+                    type ssh-rsa
+                }
+            }
+            level admin
+        }
+    }
+    ntp {
+        server 0.pool.ntp.org {
+        }
+        server 1.pool.ntp.org {
+        }
+        server 2.pool.ntp.org {
+        }
+        server be.pool.ntp.org {
+        }
+    }
+    package {
+        auto-sync 1
+        repository squeeze {
+            components "main contrib non-free"
+            distribution squeeze
+            password ""
+            url http://archive.debian.org/debian
+            username ""
+        }
+        repository squeeze-lts {
+            components "main contrib non-free"
+            distribution squeeze-lts
+            password ""
+            url http://archive.debian.org/debian
+            username ""
+        }
+    }
+    syslog {
+        global {
+            facility all {
+                level notice
+            }
+            facility protocols {
+                level debug
+            }
+        }
+    }
+    time-zone Etc/GMT+1
+}
+
+
+/* Warning: Do not remove the following line. */
+/* === vyatta-config-version: "vrrp@1:zone-policy@1:qos@1:dhcp-relay@1:quagga@2:firewall@5:cron@1:system@6:conntrack-sync@1:ipsec@4:webgui@1:wanloadbalance@3:cluster@1:webproxy@1:dhcp-server@4:nat@4:config-management@1:conntrack@1" === */
+/* Release version: VyOS 1.1.8 */

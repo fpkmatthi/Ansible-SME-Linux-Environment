@@ -1,0 +1,22 @@
+---
+
+# - name: VyOS Config | Retrieve VyOS version info
+#   vyos_command:
+#     commands:
+#       - show version
+
+- name: VyOS Config | Copy template file
+  vyos_config:
+    src: templates/config.j2
+
+# - name: VyOS | Save config
+#   vyos_command:
+#     commands:
+#       - commit
+#       - save
+#
+#
+- name: VyOS | Restart DHCP relay if defined
+  vyos_command:
+    commands:
+      - restart dhcp relay-agent

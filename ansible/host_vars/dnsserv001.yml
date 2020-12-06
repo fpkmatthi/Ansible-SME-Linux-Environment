@@ -1,0 +1,77 @@
+---
+# Primary Configuration
+
+bind_zones:
+  # Primary server for domain fpkmatthi.web (use zone type autodetection)
+  - name: 'fpkmatthi.web'
+    primaries:
+      - 172.16.192.2
+    networks:
+      - '192.0.2'
+    name_servers:
+      - dnsserv001.fpkmatthi.local.
+      - dnsserv002.fpkmatthi.local.
+    hostmaster_email: admin
+    hosts:
+      - name: webserv001
+        ip: 192.0.2.10
+        aliases:
+          - www
+      - name: mailserv001
+        ip: 192.0.2.20
+        aliases:
+          - mail
+    mail_servers:
+      - name: mail001
+        preference: 10
+
+  # Primary server for domain fpkmatthi.local (specify zone type explicitly)
+  - name: 'fpkmatthi.local'
+    type: primary
+    primaries:
+      - 172.16.192.2
+    networks:
+      - '172.16'
+    name_servers:
+      - dnsserv001
+      - dnsserv002
+    hosts:
+      - name: dnsserv001
+        ip: 172.16.192.2
+        aliases:
+          - ns1
+      - name: dnsserv002
+        ip: 172.16.192.3
+        aliases:
+          - ns2
+      - name: dhcpserv001
+        ip: 172.16.192.10
+        aliases:
+          - dhcp
+      - name: ldapserv001
+        ip: 172.16.192.20
+        aliases:
+          - directory
+      - name: intranetserv001
+        ip: 172.16.192.30
+        aliases: 
+          - inside
+      - name: sambaserv001
+        ip: 172.16.192.40
+        aliases:
+          - files
+    mail_servers:
+      - name: mailserv001
+        preference: 10
+    services:
+      - name: _ldap._tcp
+        weight: 100
+        port: 88
+        target: ldapserv001
+    text:
+      - name: _kerberos
+        text: KERBEROS.ACME-INC.COM
+      - name: '@'
+        text:
+          - 'some text'
+          - 'more text'

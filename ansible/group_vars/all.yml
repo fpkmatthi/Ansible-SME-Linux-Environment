@@ -1,0 +1,156 @@
+# group_vars/all.yml
+# Variables visible to all nodes
+---
+rhbase_repositories:
+  - epel-release
+rhbase_install_packages:
+  - bash-completion
+  - bind-utils
+  - git
+  - tree
+  - vim
+  - vim-enhanced
+  - wget
+  - nano
+rhbase_firewall_allow_services:
+  - samba
+  - ftp
+rhbase_firewall_allow_ports:
+rhbase_user_groups:
+  - management
+  - technical
+  - it
+  - sales
+  - public
+rhbase_users:
+  - name: fpkmatthi
+    password: "{{ vault_fpkmatthi_pw }}"
+    groups:
+      - users
+      - wheel
+      - it
+      - public
+    shell: /bin/bash
+
+  - name: stevenh
+    password: "{{ vault_stevenh_pw }}"
+    groups: 
+      - users
+      - management
+      - public
+    shell: /bin/bash
+
+  - name: stevenv
+    password: "{{ vault_stevenv_pw }}"
+    groups:
+      - users
+      - technical
+      - public
+    shell: /bin/bash
+
+  - name: leend
+    password: "{{ vault_leend_pw }}"
+    groups:
+      - users
+      - technical
+      - public
+    shell: /bin/bash
+
+  - name: svena
+    password: "{{ vault_svena_pw }}"
+    groups:
+      - users
+      - sales
+      - public
+    shell: /bin/bash
+
+  - name: nehirb
+    password: "{{ vault_nehirb_pw }}"
+    groups:
+      - users
+      - it
+      - public
+    shell: /bin/bash
+
+  - name: alexanderd
+    password: "{{ vault_alexanderd_pw }}"
+    groups:
+      - users
+      - technical
+      - public
+    # shell: /bin/bash
+
+  - name: krisv
+    password: "{{ vault_krisv_pw }}"
+    groups:
+      - users
+      - management
+      - public
+    shell: /bin/bash
+
+  - name: benoitp
+    password: "{{ vault_benoitp_pw }}"
+    groups:
+      - users
+      - sales
+      - public
+    shell: /bin/bash
+
+  - name: anc
+    password: "{{ vault_anc_pw }}"
+    groups:
+      - users
+      - technical
+      - public
+    shell: /bin/bash
+
+  - name: elenaa
+    password: "{{ vault_elenaa_pw }}"
+    groups:
+      - users
+      - management
+      - public
+    shell: /bin/bash
+
+  - name: evyt
+    password: "{{ vault_evyt_pw }}"
+    groups:
+      - users
+      - technical
+      - public
+    shell: /bin/bash
+
+  - name: christophev
+    password: "{{ vault_christophev_pw }}"
+    groups:
+      - users
+      - it
+      - public
+    shell: /bin/bash
+
+  - name: stefaanv
+    password: "{{ vault_stefaanv_pw }}"
+    groups:
+      - users
+      - technical
+      - public
+    shell: /bin/bash
+
+
+fail2ban_config_maxretry: 5
+fail2ban_firewalld: true
+fail2ban_modules: 
+  - ssh
+fail2ban_jails:
+  - name: sshd
+    enabled: true
+    bantime: 600
+    maxretry: 5
+
+default_gw: 172.16.255.254
+
+resolv_nameservers:
+  - "172.16.192.2"
+  - "172.16.192.3"
+resolv_search:
+  - "fpkmatthi.local"

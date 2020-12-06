@@ -1,0 +1,12 @@
+# dhcp.yml
+---
+
+- hosts: dhcp
+  become: true
+  roles:
+    - bertvv.rh-base
+    - bertvv.dhcp
+    - hwwilliams.fail2ban
+    - resolv.conf
+    - default.gw
+

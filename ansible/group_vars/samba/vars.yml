@@ -1,0 +1,150 @@
+---
+samba_workgroup: FPKMATTHI
+samba_shares_root: /srv/shares
+samba_netbios_name: FILES
+samba_load_printers: false
+samba_users:
+  - name: fpkmatthi
+    password: "{{ vault_fpkmatthi_pw }}"
+  - name: stevenh
+    password: "{{ vault_stevenh_pw }}"
+  - name: stevenv
+    password: "{{ vault_stevenv_pw }}"
+  - name: leend
+    password: "{{ vault_leend_pw }}"
+  - name: svena
+    password: "{{ vault_svena_pw }}"
+  - name: nehirb
+    password: "{{ vault_nehirb_pw }}"
+  - name: alexanderd
+    password: "{{ vault_alexanderd_pw }}"
+  - name: krisv
+    password: "{{ vault_krisv_pw }}"
+  - name: benoitp
+    password: "{{ vault_benoitp_pw }}"
+  - name: anc
+    password: "{{ vault_anc_pw }}"
+  - name: elenaa
+    password: "{{ vault_elenaa_pw }}"
+  - name: evyt
+    password: "{{ vault_evyt_pw }}"
+  - name: christophev
+    password: "{{ vault_christophev_pw }}"
+  - name: stefaanv
+    password: "{{ vault_stefaanv_pw }}"
+  
+samba_shares:
+  - name: management
+    group: management
+    valid_users: +management
+    write_list: +management
+    browsable: yes
+    # directory_mode: 0770
+  - name: technical
+    group: technical
+    valid_users: +technical,+management,+it,+sales
+    write_list: +technical
+    browsable: yes
+    #directory_mode: 0775
+  - name: sales
+    group: sales
+    valid_users: +sales,+management
+    write_list: +sales
+    browsable: yes
+    #directory_mode: 0775
+  - name: it
+    group: it
+    valid_users: +it,+management
+    write_list: +it
+    browsable: yes
+    #directory_mode: 0775
+  - name: public
+    group: public
+    valid_users: +public,+management,+it,+sales,+technical
+    write_list: +public,+management,+it,+sales,+technical
+    #directory_mode: 0777
+
+vsftpd_anonymous_enable: false
+vsftpd_local_enable: true
+vsftpd_write_enable: true
+vsftpd_local_umask: '002'
+vsftpd_local_root: "/srv/shares"
+# vsftpd_connect_from_port_20: false
+
+vsftpd_extra_permissions:
+  - folder: "/srv/shares/public/"
+    entity: "public"
+    etype: "group"
+    permissions: "rwx"
+
+  - folder: "/srv/shares/management/"
+    entity: "management"
+    etype: "group"
+    permissions: "rwx"
+  - folder: "/srv/shares/management/"
+    entity: "technical"
+    etype: "group"
+    permissions: "---"
+  - folder: "/srv/shares/management/"
+    entity: "sales"
+    etype: "group"
+    permissions: "---"
+  - folder: "/srv/shares/management/"
+    entity: "it"
+    etype: "group"
+    permissions: "---"
+  - folder: "/srv/shares/management/"
+    entity: "public"
+    etype: "group"
+    permissions: "---"
+
+  - folder: "/srv/shares/sales/"
+    entity: "sales"
+    etype: "group"
+    permissions: "rwx"
+  - folder: "/srv/shares/sales/"
+    entity: "management"
+    etype: "group"
+    permissions: "r-x"
+  - folder: "/srv/shares/sales/"
+    entity: "technical"
+    etype: "group"
+    permissions: "---"
+  - folder: "/srv/shares/sales/"
+    entity: "it"
+    etype: "group"
+    permissions: "---"
+
+  - folder: "/srv/shares/technical/"
+    entity: "technical"
+    etype: "group"
+    permissions: "rwx"
+  - folder: "/srv/shares/technical/"
+    entity: "it"
+    etype: "group"
+    permissions: "r-x"
+  - folder: "/srv/shares/technical/"
+    entity: "management"
+    etype: "group"
+    permissions: "r-x"
+  - folder: "/srv/shares/technical/"
+    entity: "sales"
+    etype: "group"
+    permissions: "r-x"
+
+  - folder: "/srv/shares/it/"
+    entity: "it"
+    etype: "group"
+    permissions: "rw-"
+  - folder: "/srv/shares/it/"
+    entity: "management"
+    etype: "group"
+    permissions: "r-x"
+  - folder: "/srv/shares/it/"
+    entity: "technical"
+    etype: "group"
+    permissions: "---"
+  - folder: "/srv/shares/it/"
+    entity: "sales"
+    etype: "group"
+    permissions: "---"

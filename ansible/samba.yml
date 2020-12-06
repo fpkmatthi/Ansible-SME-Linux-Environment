@@ -1,0 +1,11 @@
+# samba.yml
+---
+
+- hosts: samba
+  become: true
+  roles:
+    - bertvv.rh-base
+    - bertvv.samba
+    - bertvv.vsftpd
+    - hwwilliams.fail2ban
+
